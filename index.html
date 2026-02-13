@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Love Story</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Great+Vibes&family=Montserrat:wght@400;600&family=Pacifico&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-heart"></div>
+      <p>Preparing our story...</p>
+      <div class="loading-bar"><span id="loading-progress"></span></div>
+    </div>
+
+    <main id="app" class="app hidden">
+      <button id="music-toggle" class="music-toggle" aria-label="Toggle music">🔊</button>
+      <audio id="bg-music" loop preload="auto" src="song.mp3"></audio>
+
+      <div class="global-particles" id="global-particles" aria-hidden="true"></div>
+
+      <section class="scene active" data-scene="0" id="scene-opening">
+        <div class="scene-bg scene-bg-1"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+          <h1 class="romantic-title type-target" data-text="Happy Valentine's Day, Bidisha Borah"></h1>
+          <h2 class="subtitle type-target" data-text="To the most beautiful person in my life."></h2>
+          <p class="body-text fade-line type-target" data-text="Every day with you feels like a story worth remembering, and tonight I just want to celebrate you and everything you mean to me."></p>
+          <div class="tap-hint">Tap anywhere to continue</div>
+        </div>
+        <div class="heart-burst" id="opening-heart-burst" aria-hidden="true"></div>
+      </section>
+
+      <section class="scene" data-scene="1" id="scene-time">
+        <div class="scene-bg scene-bg-2"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+          <h2 class="romantic-title">Our Time Together</h2>
+          <p class="counter-line">
+            We have been together for
+            <span class="counter" id="days-counter" data-target="329">0</span>
+            days.
+          </p>
+          <p class="counter-line">
+            And shared over
+            <span class="counter" id="heartbeat-counter" data-target="33163200">0</span>
+            heartbeats together.
+          </p>
+          <p class="body-text fade-line">
+            Through every laugh, every silence, every late-night conversation, and every storm we faced, we kept choosing each other.
+          </p>
+          <div class="tap-hint">Tap anywhere to continue</div>
+        </div>
+        <div class="giant-heart"></div>
+        <div class="heartbeat-wave" aria-hidden="true"></div>
+      </section>
+
+      <section class="scene" data-scene="2" id="scene-apology">
+        <div class="scene-bg scene-bg-3"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content narrow">
+          <h2 class="romantic-title">A Promise From My Heart</h2>
+          <p class="body-text fade-line">
+            Through all our fights, misunderstandings, and difficult moments, we are still here together. I know there were times when I hurt you, sometimes without realizing it, and for that, I am truly sorry. You showed patience even when I didn’t deserve it. I want to grow, to become better for you, and to give you the happiness and peace you deserve. Thank you for loving me through my imperfect moments.
+          </p>
+          <div class="tap-hint">Tap anywhere to continue</div>
+        </div>
+      </section>
+
+      <section class="scene" data-scene="3" id="scene-memories">
+        <div class="scene-bg scene-bg-4"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+          <h2 class="romantic-title">Scratch to Reveal Our Memories</h2>
+          <div id="scratch-stage" class="scratch-stage"></div>
+          <p class="body-text" id="memory-caption"></p>
+        </div>
+      </section>
+
+      <section class="scene" data-scene="4" id="scene-final">
+        <div class="scene-bg scene-bg-5"></div>
+        <div class="scene-overlay darken"></div>
+        <div class="scene-content narrow">
+          <h2 class="romantic-title">Forever in My Heart</h2>
+          <p class="body-text fade-line">
+            I wish I could share many more memories here. But memories have limits, even when feelings don’t. These moments will always stay with me, even if life takes us in different directions.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
