@@ -7,10 +7,11 @@ const musicToggle = document.getElementById('music-toggle');
 const particlesRoot = document.getElementById('global-particles');
 
 const memoryCards = [
-  { src: 'fav1.mp4', caption: 'My favorite memory with you.', type: 'video' },
-  { src: 'fav2.mp4', caption: 'A moment I will always cherish.', type: 'video' },
-  { src: 'fav3.jpeg', caption: 'A memory that still makes me smile.', type: 'image' },
-  { src: 'fav4.jpeg', caption: 'Another beautiful piece of our story.', type: 'image' }
+  { src: 'fav1.mp4', caption: 'FAV1 — favorite memory.', type: 'video' },
+  { src: 'fav2.mp4', caption: 'FAV2 — second favorite.', type: 'video' },
+  { src: 'fav3.jpeg', caption: 'FAV3 — cherished memory.', type: 'image' },
+  { src: 'fav4.jpeg', caption: 'FAV4 — beautiful memory.', type: 'image' },
+  { src: 'FAV5', caption: 'FAV5 — another unforgettable memory.', type: 'image' }
 ];
 
 const state = {
@@ -28,26 +29,25 @@ const state = {
 const formatNumber = (num) => new Intl.NumberFormat('en-US').format(Math.floor(num));
 
 const preloadAssets = async () => {
-  const assets = ['song.mp3', ...memoryCards.map((card) => card.src)];
+  const assets = [{ src: 'song.mp3', type: 'audio' }, ...memoryCards];
   let loaded = 0;
   await Promise.all(
     assets.map(
-      (src) =>
+      ({ src, type }) =>
         new Promise((resolve) => {
-          const ext = src.split('.').pop();
           const done = () => {
             loaded += 1;
             loadingProgress.style.width = `${(loaded / assets.length) * 100}%`;
             resolve();
           };
 
-          if (['mp4', 'webm', 'ogg'].includes(ext)) {
+          if (type === 'video') {
             const video = document.createElement('video');
             video.preload = 'metadata';
             video.src = src;
             video.onloadeddata = done;
             video.onerror = done;
-          } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+          } else if (type === 'image') {
             const img = new Image();
             img.src = src;
             img.onload = done;
@@ -266,6 +266,11 @@ const scratchCardTemplate = (card) => {
   }
 
   media.className = 'memory-media';
+  media.addEventListener('error', () => {
+    media.style.display = 'none';
+    container.style.background =
+      'linear-gradient(135deg, rgba(255,178,213,0.95), rgba(255,150,198,0.92), rgba(255,214,180,0.92))';
+  });
   container.appendChild(media);
 
   const canvas = document.createElement('canvas');
@@ -298,17 +303,23 @@ const renderScratchCard = () => {
   ctx.scale(dpr, dpr);
 
   const grd = ctx.createLinearGradient(0, 0, rect.width, rect.height);
-  grd.addColorStop(0, '#f8aacd');
-  grd.addColorStop(1, '#b34d8b');
+  grd.addColorStop(0, '#ffd5eb');
+  grd.addColorStop(0.5, '#ff9ac6');
+  grd.addColorStop(1, '#ffb689');
   ctx.fillStyle = grd;
   ctx.fillRect(0, 0, rect.width, rect.height);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
   ctx.font = '700 22px Montserrat';
   ctx.textAlign = 'center';
   ctx.fillText('Scratch me ✨', rect.width / 2, rect.height / 2);
 
   let drawing = false;
+  let moveCount = 0;
+  let lastPoint = null;
+
+  const revealThreshold = 0.38;
+  const brushRadius = Math.max(30, rect.width * 0.075);
 
   const getPos = (e) => {
     const r = canvas.getBoundingClientRect();
@@ -318,37 +329,44 @@ const renderScratchCard = () => {
 
   const scratch = (x, y) => {
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(x, y, Math.max(20, rect.width * 0.045), 0, Math.PI * 2);
-    ctx.fill();
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    if (!lastPoint) {
+      ctx.beginPath();
+      ctx.arc(x, y, brushRadius, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.lineWidth = brushRadius * 2;
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    lastPoint = { x, y };
     spawnScratchSpark(x, y, stage);
   };
 
-  const pointerDown = (e) => {
-    e.preventDefault();
-    drawing = true;
-    const { x, y } = getPos(e);
-    scratch(x, y);
-  };
-
-  const pointerMove = (e) => {
-    if (!drawing) return;
-    e.preventDefault();
-    const { x, y } = getPos(e);
-    scratch(x, y);
-  };
-
-  const pointerUp = () => {
-    drawing = false;
+  const getTransparentRatio = () => {
+    const sampleStride = 32;
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     let transparentPixels = 0;
-    for (let i = 3; i < imageData.length; i += 4) {
-      if (imageData[i] === 0) transparentPixels += 1;
+    let sampled = 0;
+
+    for (let i = 3; i < imageData.length; i += sampleStride * 4) {
+      sampled += 1;
+      if (imageData[i] < 20) transparentPixels += 1;
     }
-    const transparentRatio = transparentPixels / (imageData.length / 4);
-    if (transparentRatio > 0.4 && !state.scratchDone) {
+
+    return sampled ? transparentPixels / sampled : 0;
+  };
+
+  const tryReveal = () => {
+    const transparentRatio = getTransparentRatio();
+    if (transparentRatio > revealThreshold && !state.scratchDone) {
       state.scratchDone = true;
-      canvas.style.transition = 'opacity 450ms ease';
+      canvas.style.transition = 'opacity 300ms ease';
       canvas.style.opacity = 0;
       setTimeout(() => {
         if (state.currentCard < memoryCards.length - 1) {
@@ -357,10 +375,33 @@ const renderScratchCard = () => {
           renderScratchCard();
         } else {
           state.allowAdvance = true;
-          setTimeout(nextScene, 700);
+          setTimeout(nextScene, 500);
         }
-      }, 900);
+      }, 450);
     }
+  };
+
+  const pointerDown = (e) => {
+    e.preventDefault();
+    drawing = true;
+    const { x, y } = getPos(e);
+    lastPoint = null;
+    scratch(x, y);
+  };
+
+  const pointerMove = (e) => {
+    if (!drawing) return;
+    e.preventDefault();
+    const { x, y } = getPos(e);
+    scratch(x, y);
+    moveCount += 1;
+    if (moveCount % 4 === 0) tryReveal();
+  };
+
+  const pointerUp = () => {
+    drawing = false;
+    lastPoint = null;
+    tryReveal();
   };
 
   canvas.addEventListener('mousedown', pointerDown);
@@ -379,18 +420,18 @@ const spawnScratchSpark = (x, y, parent) => {
   spark.className = 'scratch-spark';
   spark.style.left = `${x}px`;
   spark.style.top = `${y}px`;
-  spark.style.width = `${Math.random() * 4 + 2}px`;
+  spark.style.width = `${Math.random() * 6 + 4}px`;
   spark.style.height = spark.style.width;
-  spark.style.background = 'radial-gradient(circle, #fff9c2, #ff8cc8)';
+  spark.style.background = 'radial-gradient(circle, #fff9dc, #ff95cc)';
   parent.appendChild(spark);
   spark.animate(
     [
       { transform: 'translate(-50%, -50%) scale(1)', opacity: 0.95 },
-      { transform: `translate(${(Math.random() - 0.5) * 22}px, ${-20 - Math.random() * 20}px) scale(0.2)`, opacity: 0 }
+      { transform: `translate(${(Math.random() - 0.5) * 30}px, ${-22 - Math.random() * 24}px) scale(0.2)`, opacity: 0 }
     ],
-    { duration: 520, easing: 'ease-out' }
+    { duration: 420, easing: 'ease-out' }
   );
-  setTimeout(() => spark.remove(), 550);
+  setTimeout(() => spark.remove(), 450);
 };
 
 const bindInteraction = () => {
@@ -403,13 +444,21 @@ const bindInteraction = () => {
   window.addEventListener('touchstart', interact, { passive: true });
 
   let touchStartX = 0;
-  window.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].clientX;
-  }, { passive: true });
-  window.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (dx < -45 && state.currentScene !== 3) nextScene();
-  }, { passive: true });
+  window.addEventListener(
+    'touchstart',
+    (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    },
+    { passive: true }
+  );
+  window.addEventListener(
+    'touchend',
+    (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (dx < -45 && state.currentScene !== 3) nextScene();
+    },
+    { passive: true }
+  );
 };
 
 musicToggle.addEventListener('click', async (e) => {
