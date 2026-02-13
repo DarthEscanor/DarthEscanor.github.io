@@ -1,10 +1,10 @@
 :root {
-  --bg-main: #ffd5e6;
+  --bg-main: #ffd9ea;
   --text-main: #fff7fb;
-  --accent: #ff5ea1;
-  --accent-soft: #ff9ec6;
-  --glow: rgba(255, 133, 190, 0.72);
-  --overlay: rgba(132, 33, 78, 0.26);
+  --accent: #ff5f9b;
+  --accent-soft: #ffb0d1;
+  --glow: rgba(255, 146, 198, 0.75);
+  --overlay: rgba(255, 182, 210, 0.16);
 }
 
 * {
@@ -100,10 +100,11 @@ body {
   position: absolute;
   inset: -5%;
   background:
-    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 182, 210, 0.3) 24%, transparent 52%),
-    radial-gradient(circle at 85% 22%, rgba(255, 228, 175, 0.45), transparent 55%),
-    linear-gradient(145deg, #ffa5c9 0%, #ff93be 35%, #ffb0d2 66%, #ffd1b8 100%);
-  animation: cinematicZoom 16s linear infinite alternate;
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 202, 227, 0.44) 30%, transparent 58%),
+    radial-gradient(circle at 85% 22%, rgba(255, 236, 190, 0.55), transparent 58%),
+    radial-gradient(circle at 56% 82%, rgba(255, 183, 217, 0.38), transparent 60%),
+    linear-gradient(145deg, #ffb7d4 0%, #ffa7cb 35%, #ffc4dc 66%, #ffe1c9 100%);
+  animation: cinematicZoom 16s linear infinite alternate, colorBloom 9s ease-in-out infinite alternate;
   will-change: transform, filter;
 }
 
@@ -117,15 +118,15 @@ body {
 
 .scene-bg-4 {
   background:
-    radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.68), transparent 45%),
-    radial-gradient(circle at 75% 25%, rgba(255, 214, 238, 0.62), transparent 55%),
-    radial-gradient(circle at 62% 72%, rgba(255, 202, 173, 0.58), transparent 60%),
-    linear-gradient(128deg, #ff9bc2 0%, #ff86b5 40%, #ffaed3 73%, #ffd4bc 100%);
+    radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.82), transparent 48%),
+    radial-gradient(circle at 75% 25%, rgba(255, 216, 236, 0.72), transparent 58%),
+    radial-gradient(circle at 62% 72%, rgba(255, 211, 184, 0.64), transparent 60%),
+    linear-gradient(125deg, #ffb2d3 0%, #ff9fc8 36%, #ffc1dd 70%, #ffe0c8 100%);
   animation: cinematicZoom 12s ease-in-out infinite alternate, glowShift 8s ease-in-out infinite alternate;
 }
 
 .scene-bg-5 {
-  filter: hue-rotate(3deg) saturate(1.08) brightness(0.95);
+  filter: hue-rotate(3deg) saturate(1.1) brightness(1.03);
 }
 
 .scene-overlay {
@@ -288,7 +289,7 @@ body {
   aspect-ratio: 3 / 4;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 14px 35px rgba(158, 55, 103, 0.33), 0 0 32px rgba(255, 144, 199, 0.48);
+  box-shadow: 0 16px 36px rgba(184, 84, 126, 0.27), 0 0 38px rgba(255, 176, 212, 0.62);
   position: relative;
 }
 
@@ -322,13 +323,13 @@ body {
 }
 
 #scene-memories .scene-overlay {
-  background: linear-gradient(180deg, rgba(255, 164, 203, 0.2), rgba(142, 22, 78, 0.2));
+  background: linear-gradient(180deg, rgba(255, 208, 228, 0.24), rgba(255, 174, 214, 0.18));
 }
 
 .float-heart {
   width: 14px;
   height: 14px;
-  background: rgba(255, 220, 237, 0.85);
+  background: rgba(255, 238, 246, 0.95);
   transform: rotate(45deg);
   animation: floatHearts linear infinite;
 }
@@ -356,16 +357,29 @@ body {
 .twinkle {
   width: 4px;
   height: 4px;
-  background: #fff8d0;
-  box-shadow: 0 0 14px rgba(255, 255, 196, 0.9);
+  background: #fffce4;
+  box-shadow: 0 0 18px rgba(255, 252, 215, 1);
   animation: twinkleGlow 2.8s ease-in-out infinite;
 }
 
-.twinkle:nth-child(7) { left: 18%; top: 22%; }
-.twinkle:nth-child(8) { left: 73%; top: 16%; animation-delay: -1s; }
-.twinkle:nth-child(9) { left: 56%; top: 32%; animation-delay: -1.8s; }
-.twinkle:nth-child(10) { left: 34%; top: 44%; animation-delay: -0.6s; }
-.twinkle:nth-child(11) { left: 84%; top: 42%; animation-delay: -2.2s; }
+.light-orb {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 250, 237, 0.75), rgba(255, 176, 211, 0.18) 60%, transparent 70%);
+  filter: blur(6px);
+  animation: orbDrift 12s ease-in-out infinite alternate;
+}
+
+.light-orb:nth-child(7) { left: 6%; top: 14%; }
+.light-orb:nth-child(8) { left: 63%; top: 10%; animation-delay: -4s; }
+.light-orb:nth-child(9) { left: 52%; top: 58%; animation-delay: -8s; }
+
+.twinkle:nth-child(10) { left: 18%; top: 22%; }
+.twinkle:nth-child(11) { left: 73%; top: 16%; animation-delay: -1s; }
+.twinkle:nth-child(12) { left: 56%; top: 32%; animation-delay: -1.8s; }
+.twinkle:nth-child(13) { left: 34%; top: 44%; animation-delay: -0.6s; }
+.twinkle:nth-child(14) { left: 84%; top: 42%; animation-delay: -2.2s; }
 
 @keyframes heartbeat {
   0%, 100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
@@ -382,6 +396,11 @@ body {
   100% { filter: saturate(1.17) brightness(1.1); }
 }
 
+@keyframes colorBloom {
+  0% { filter: saturate(1.02) brightness(1.02); }
+  100% { filter: saturate(1.2) brightness(1.08); }
+}
+
 @keyframes floatHearts {
   0% { transform: translate3d(0, 0, 0) rotate(45deg) scale(0.85); opacity: 0; }
   15% { opacity: 0.8; }
@@ -392,6 +411,11 @@ body {
 @keyframes twinkleGlow {
   0%, 100% { opacity: 0.4; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.7); }
+}
+
+@keyframes orbDrift {
+  0% { transform: translate3d(0, 0, 0) scale(0.95); opacity: 0.45; }
+  100% { transform: translate3d(28px, -22px, 0) scale(1.14); opacity: 0.8; }
 }
 
 @keyframes fadeUp {
@@ -410,8 +434,8 @@ body {
 }
 
 @keyframes finalDarken {
-  0% { background: rgba(94, 25, 58, 0.4); }
-  100% { background: rgba(36, 5, 24, 0.92); }
+  0% { background: rgba(255, 178, 208, 0.24); }
+  100% { background: rgba(62, 14, 38, 0.75); }
 }
 
 @media (max-width: 600px) {
