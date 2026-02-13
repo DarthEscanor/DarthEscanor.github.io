@@ -1,6 +1,6 @@
 :root {
   --bg-main: #ffd9ea;
-  --text-main: #fff7fb;
+  --text-main: #6b1f3a;
   --accent: #ff5f9b;
   --accent-soft: #ffb0d1;
   --glow: rgba(255, 146, 198, 0.75);
@@ -163,20 +163,24 @@ body {
   font-size: clamp(2.2rem, 8vw, 4.5rem);
   line-height: 1.1;
   font-weight: 400;
-  text-shadow: 0 0 12px var(--glow), 0 0 22px rgba(255, 255, 255, 0.28);
+  color: #5a1830;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
 .subtitle {
   font-family: 'Pacifico', cursive;
   font-size: clamp(1.2rem, 4.5vw, 2rem);
   margin: 0;
+  color: #7a2145;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
 .body-text {
   max-width: 760px;
   font-size: clamp(1rem, 3.6vw, 1.25rem);
   line-height: 1.7;
-  text-shadow: 0 0 10px rgba(255, 175, 211, 0.35);
+  color: #8c2b55;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   font-family: 'Poppins', sans-serif;
 }
 
@@ -189,7 +193,9 @@ body {
   font-size: 0.88rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #8c2b55;
   opacity: 0.72;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   animation: pulse 1.8s ease infinite;
   font-family: 'Montserrat', sans-serif;
 }
@@ -197,13 +203,15 @@ body {
 .counter-line {
   margin: 0;
   font-size: clamp(1rem, 4vw, 1.5rem);
+  color: #7a2145;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   font-family: 'Montserrat', sans-serif;
 }
 
 .counter {
-  color: #ffe9f5;
+  color: #6b1f3a;
   font-weight: 600;
-  text-shadow: 0 0 12px rgba(255, 146, 200, 0.85);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -312,6 +320,8 @@ body {
 #memory-caption {
   min-height: 1.5em;
   margin-top: 0.8rem;
+  color: #7a2145;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
   font-family: 'Dancing Script', cursive;
   font-size: clamp(1.3rem, 5vw, 2rem);
 }
@@ -447,4 +457,15 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+#scene-opening .romantic-title {
+  white-space: normal;
+}
+
+#scene-opening .bubu-line {
+  display: block;
+  margin-top: 0.1em;
+  font-size: 1.16em;
+  letter-spacing: 0.02em;
 }

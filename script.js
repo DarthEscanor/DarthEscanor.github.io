@@ -11,7 +11,7 @@ const memoryCards = [
   { src: 'fav2.mp4', caption: 'FAV2 — second favorite.', type: 'video' },
   { src: 'fav3.jpeg', caption: 'FAV3 — cherished memory.', type: 'image' },
   { src: 'fav4.jpeg', caption: 'FAV4 — beautiful memory.', type: 'image' },
-  { src: 'FAV5', caption: 'FAV5 — another unforgettable memory.', type: 'image' }
+  { src: 'fav5.mp4', caption: 'FAV5 — another unforgettable memory.', type: 'video' }
 ];
 
 const state = {
