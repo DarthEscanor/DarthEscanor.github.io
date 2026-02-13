@@ -318,8 +318,8 @@ const renderScratchCard = () => {
   let moveCount = 0;
   let lastPoint = null;
 
-  const revealThreshold = 0.38;
-  const brushRadius = Math.max(30, rect.width * 0.075);
+  const revealThreshold = 0.4;
+  const brushRadius = Math.max(42, rect.width * 0.1);
 
   const getPos = (e) => {
     const r = canvas.getBoundingClientRect();
@@ -382,7 +382,7 @@ const renderScratchCard = () => {
   };
 
   const pointerDown = (e) => {
-    e.preventDefault();
+    if (e.cancelable) e.preventDefault();
     drawing = true;
     const { x, y } = getPos(e);
     lastPoint = null;
@@ -391,11 +391,11 @@ const renderScratchCard = () => {
 
   const pointerMove = (e) => {
     if (!drawing) return;
-    e.preventDefault();
+    if (e.cancelable) e.preventDefault();
     const { x, y } = getPos(e);
     scratch(x, y);
     moveCount += 1;
-    if (moveCount % 4 === 0) tryReveal();
+    if (moveCount % 2 === 0) tryReveal();
   };
 
   const pointerUp = () => {
@@ -429,9 +429,9 @@ const spawnScratchSpark = (x, y, parent) => {
       { transform: 'translate(-50%, -50%) scale(1)', opacity: 0.95 },
       { transform: `translate(${(Math.random() - 0.5) * 30}px, ${-22 - Math.random() * 24}px) scale(0.2)`, opacity: 0 }
     ],
-    { duration: 420, easing: 'ease-out' }
+    { duration: 300, easing: 'ease-out' }
   );
-  setTimeout(() => spark.remove(), 450);
+  setTimeout(() => spark.remove(), 320);
 };
 
 const bindInteraction = () => {
