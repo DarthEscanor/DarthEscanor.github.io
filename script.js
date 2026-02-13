@@ -23,7 +23,9 @@ const state = {
   activeCanvas: null,
   sceneLock: false,
   scratchDone: false,
-  finalStarted: false
+  finalStarted: false,
+  revealTimer: null,
+  revealCleanup: null
 };
 
 const formatNumber = (num) => new Intl.NumberFormat('en-US').format(Math.floor(num));
@@ -281,19 +283,124 @@ const scratchCardTemplate = (card) => {
 };
 
 const setupScratchCards = () => {
+  if (state.revealTimer) {
+    clearTimeout(state.revealTimer);
+    state.revealTimer = null;
+  }
+  if (state.revealCleanup) {
+    state.revealCleanup();
+    state.revealCleanup = null;
+  }
   state.currentCard = 0;
   state.scratchDone = false;
   renderScratchCard();
 };
 
-const renderScratchCard = () => {
+const revealMediaAndContinue = ({ card, container, media, canvas }) => {
+  const isLastCard = state.currentCard === memoryCards.length - 1;
+  const imageDelay = isLastCard ? 6000 : 4000;
+  const crossfadeDuration = 950;
+
+  const clearRevealHandlers = () => {
+    if (state.revealTimer) {
+      clearTimeout(state.revealTimer);
+      state.revealTimer = null;
+    }
+    if (state.revealCleanup) {
+      state.revealCleanup();
+      state.revealCleanup = null;
+    }
+  };
+
+  const continueFlow = () => {
+    clearRevealHandlers();
+
+    container.style.transition = `opacity ${crossfadeDuration}ms ease`;
+    container.style.opacity = 0;
+
+    state.revealTimer = setTimeout(() => {
+      if (state.currentCard < memoryCards.length - 1) {
+        state.currentCard += 1;
+        state.scratchDone = false;
+        renderScratchCard({ fadeIn: true });
+      } else {
+        state.allowAdvance = true;
+        nextScene();
+      }
+    }, crossfadeDuration);
+  };
+
+  canvas.style.pointerEvents = 'none';
+  canvas.style.transition = 'opacity 350ms ease';
+  canvas.style.opacity = 0;
+
+  if (card.type === 'image') {
+    media.animate(
+      [
+        { filter: 'brightness(1) drop-shadow(0 0 0 rgba(255, 201, 227, 0.1))' },
+        { filter: 'brightness(1.06) drop-shadow(0 0 18px rgba(255, 182, 218, 0.55))' },
+        { filter: 'brightness(1) drop-shadow(0 0 0 rgba(255, 201, 227, 0.1))' }
+      ],
+      { duration: 2100, iterations: Infinity, easing: 'ease-in-out' }
+    );
+    state.revealTimer = setTimeout(continueFlow, imageDelay);
+    return;
+  }
+
+  media.loop = false;
+  media.playsInline = true;
+  media.setAttribute('playsinline', '');
+
+  const onVideoEnd = () => continueFlow();
+  media.addEventListener('ended', onVideoEnd, { once: true });
+  state.revealCleanup = () => media.removeEventListener('ended', onVideoEnd);
+
+  const pickVideoDelay = () => {
+    if (!Number.isFinite(media.duration) || media.duration <= 0) {
+      return isLastCard ? 6000 : 6200;
+    }
+
+    const durationMs = media.duration * 1000;
+    if (isLastCard) return durationMs <= 6000 ? durationMs + 100 : 6000;
+    return durationMs <= 7000 ? durationMs + 100 : 6200;
+  };
+
+  state.revealTimer = setTimeout(continueFlow, pickVideoDelay());
+
+  media
+    .play()
+    .then(async () => {
+      try {
+        media.muted = false;
+        await media.play();
+      } catch {
+        media.muted = true;
+      }
+    })
+    .catch(() => {
+      media.muted = true;
+    });
+};
+
+const renderScratchCard = ({ fadeIn = false } = {}) => {
   const stage = document.getElementById('scratch-stage');
   const caption = document.getElementById('memory-caption');
   const card = memoryCards[state.currentCard];
   const { container, canvas } = scratchCardTemplate(card);
   stage.innerHTML = '';
+  if (fadeIn) {
+    container.style.opacity = 0;
+    container.style.transition = 'opacity 950ms ease';
+  }
   stage.appendChild(container);
+  if (fadeIn) {
+    requestAnimationFrame(() => {
+      container.style.opacity = 1;
+    });
+  }
   caption.textContent = card.caption;
+
+  const media = container.querySelector('.memory-media');
 
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   const dpr = window.devicePixelRatio || 1;
@@ -366,18 +473,7 @@ const renderScratchCard = () => {
     const transparentRatio = getTransparentRatio();
     if (transparentRatio > revealThreshold && !state.scratchDone) {
       state.scratchDone = true;
-      canvas.style.transition = 'opacity 300ms ease';
-      canvas.style.opacity = 0;
-      setTimeout(() => {
-        if (state.currentCard < memoryCards.length - 1) {
-          state.currentCard += 1;
-          state.scratchDone = false;
-          renderScratchCard();
-        } else {
-          state.allowAdvance = true;
-          setTimeout(nextScene, 500);
-        }
-      }, 450);
+      revealMediaAndContinue({ card, container, media, canvas });
     }
   };
 
