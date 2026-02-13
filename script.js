@@ -11,7 +11,7 @@ const memoryCards = [
   { src: 'fav2.mp4', caption: 'Ei video tu bhalke nulale, but it is one of my fav. Your natural expressions. Your smile just melts my heart', type: 'video' },
   { src: 'fav3.jpeg', caption: 'Iyat tmk imn dhunia lagisil, I am still awestruck with this beauty. No one could catch my eyes as you do daaarlingg.', type: 'image' },
   { src: 'fav4.jpeg', caption: 'Ami bura hua r pasotu eneke pek pekai thakiba de', type: 'image' },
-  { src: 'fav5.mp4', caption: 'I wish to make more memories together with you love', type: 'video' }
+  { src: 'fav5.mp4', caption: 'I wish to make more memories together with you, my love', type: 'video' }
 ];
 
 const state = {
