@@ -7,7 +7,7 @@ const musicToggle = document.getElementById('music-toggle');
 const particlesRoot = document.getElementById('global-particles');
 
 const memoryCards = [
-  { src: 'fav1.mp4', caption: 'FAV1 — favorite memory.', type: 'video' },
+  { src: 'fav1.mp4', caption: 'Ako edin hum eneke', type: 'video' },
   { src: 'fav2.mp4', caption: 'FAV2 — second favorite.', type: 'video' },
   { src: 'fav3.jpeg', caption: 'FAV3 — cherished memory.', type: 'image' },
   { src: 'fav4.jpeg', caption: 'FAV4 — beautiful memory.', type: 'image' },
