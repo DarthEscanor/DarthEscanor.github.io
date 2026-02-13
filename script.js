@@ -8,10 +8,10 @@ const particlesRoot = document.getElementById('global-particles');
 
 const memoryCards = [
   { src: 'fav1.mp4', caption: 'Ako edin hum eneke', type: 'video' },
-  { src: 'fav2.mp4', caption: 'FAV2 — second favorite.', type: 'video' },
-  { src: 'fav3.jpeg', caption: 'FAV3 — cherished memory.', type: 'image' },
-  { src: 'fav4.jpeg', caption: 'FAV4 — beautiful memory.', type: 'image' },
-  { src: 'fav5.mp4', caption: 'FAV5 — another unforgettable memory.', type: 'video' }
+  { src: 'fav2.mp4', caption: 'Ei video tu bhalke ulua nai baru, but your natural expressions, your smile just melts my heart', type: 'video' },
+  { src: 'fav3.jpeg', caption: 'Iyat tmk imn dhunia lagisil, I am still awestruck with this beauty. No one could catch my eyes as you do daaarlingg.', type: 'image' },
+  { src: 'fav4.jpeg', caption: 'Ami bura hua r pasotu eneke pek pekai thakiba de', type: 'image' },
+  { src: 'fav5.mp4', caption: 'I wish to make more memories together with you love', type: 'video' }
 ];
 
 const state = {
